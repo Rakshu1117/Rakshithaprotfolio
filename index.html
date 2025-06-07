@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rakshitha SM | Frontend Developer & Entrepreneur</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        
+        /* Custom styles for the portfolio */
+        body {
+            font-family: 'Inter', sans-serif;
+            @apply bg-white text-gray-800; /* Changed to white background, dark text */
+        }
+        
+        /* Primary color palette - Teal */
+        .primary-bg {
+            background-color: #0d9488; /* Tailwind's teal-600 */
+        }
+        .primary-text {
+            color: #0d9488; /* Tailwind's teal-600 */
+        }
+        .primary-border {
+            border-color: #0d9488; /* Tailwind's teal-600 */
+        }
+        
+        /* Section styling */
+        .section-padding {
+            @apply py-20 px-4 sm:px-6 lg:px-8;
+        }
+        
+        /* Card styling */
+        .card {
+            @apply bg-white rounded-lg shadow-sm p-6 border border-gray-100 transition-all duration-300 hover:shadow-md hover:border-teal-100;
+        }
+        
+        /* Project card */
+        .project-card {
+            @apply bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100 relative group; /* Added relative and group for hover effects */
+            transition: all 0.3s ease-in-out;
+        }
+        .project-card:hover {
+            @apply shadow-lg border-teal-200 transform scale-102; /* Enhanced hover effect */
+        }
+
+        .project-image {
+            @apply w-full h-48 object-cover;
+        }
+
+        /* Overlay for project card hover */
+        .project-overlay {
+            @apply absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300;
+        }
+        .project-overlay-content {
+            @apply text-white text-center;
+        }
+        
+        /* Input fields */
+        .input-field {
+            @apply w-full p-3 rounded-lg bg-gray-50 border border-gray-200 text-gray-800 placeholder-gray-400 focus:border-teal-300 focus:ring-2 focus:ring-teal-100 outline-none transition-all duration-200;
+        }
+        
+        /* Buttons */
+        .btn-primary {
+            @apply bg-teal-600 text-white font-medium py-2.5 px-6 rounded-lg hover:bg-teal-700 transition-colors duration-200;
+        }
+        .btn-outline {
+            @apply border border-teal-600 text-teal-600 font-medium py-2.5 px-6 rounded-lg hover:bg-teal-50 transition-colors duration-200;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+        .animate-slide-up {
+            animation: slideUp 0.6s ease-out forwards;
+        }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        
+        /* Navigation */
+        .nav-link {
+            @apply text-gray-600 hover:text-teal-600 transition-colors duration-200 relative;
+        }
+        .nav-link::after {
+            content: '';
+            @apply absolute bottom-0 left-0 w-0 h-0.5 bg-teal-600 transition-all duration-300;
+        }
+        .nav-link:hover::after {
+            @apply w-full;
+        }
+        
+        /* Header shadow on scroll */
+        .header-scrolled {
+            @apply shadow-sm;
+        }
+
+        /* Modal specific styles - adjusted for light theme */
+        .modal-overlay {
+            @apply fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-[100] transition-opacity duration-300 opacity-0 invisible;
+        }
+        .modal-overlay.open {
+            @apply opacity-100 visible;
+        }
+        .modal-content {
+            @apply bg-white p-8 rounded-xl shadow-2xl max-w-4xl w-11/12 max-h-[90vh] overflow-y-auto relative transform scale-95 opacity-0 transition-all duration-300 text-gray-800; /* Light background, dark text */
+        }
+        .modal-overlay.open .modal-content {
+            @apply scale-100 opacity-100;
+        }
+        .close-button {
+            @apply absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-3xl font-bold cursor-pointer transition-colors duration-200;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header Section -->
+    <header id="header" class="bg-white sticky top-0 z-50 transition-all duration-300">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-5 flex justify-between items-center">
+            <!-- Logo/Name -->
+            <a href="#" class="text-xl font-bold primary-text">Rakshitha SM</a> 
+            
+            <!-- Navigation Links -->
+            <ul class="hidden md:flex space-x-8">
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#skills" class="nav-link">Skills</a></li>
+                <li><a href="#projects" class="nav-link">Projects</a></li>
+                <li><a href="#kr-services" class="nav-link">KR Services</a></li>
+                <li><a href="#certs-edu" class="nav-link">Education</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            
+            <!-- Mobile menu button -->
+            <button id="mobile-menu-button" class="md:hidden text-gray-600">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </nav>
+        
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 px-4 py-3">
+            <ul class="space-y-3">
+                <li><a href="#about" class="block py-2 text-gray-600 hover:text-teal-600">About</a></li>
+                <li><a href="#skills" class="block py-2 text-gray-600 hover:text-teal-600">Skills</a></li>
+                <li><a href="#projects" class="block py-2 text-gray-600 hover:text-teal-600">Projects</a></li>
+                <li><a href="#kr-services" class="block py-2 text-gray-600 hover:text-teal-600">KR Services</a></li>
+                <li><a href="#certs-edu" class="block py-2 text-gray-600 hover:text-teal-600">Education</a></li>
+                <li><a href="#contact" class="block py-2 text-gray-600 hover:text-teal-600">Contact</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero" class="section-padding bg-gradient-to-br from-gray-50 to-white">
+        <div class="container mx-auto">
+            <div class="flex flex-col lg:flex-row items-center">
+                <div class="lg:w-1/2 mb-12 lg:mb-0 animate-slide-up">
+                    <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-6">
+                        Hi, I'm <span class="primary-text">Rakshitha SM</span>
+                    </h1>
+                    <h2 class="text-xl md:text-2xl text-gray-600 mb-8">
+                        Frontend Developer & Founder of KR Services
+                    </h2>
+                    <p class="text-gray-600 mb-8 leading-relaxed">
+                        I create beautiful, functional digital experiences with clean code and thoughtful design.
+                    </p>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                        <a href="#projects" class="btn-primary">
+                            View My Work
+                        </a>
+                        <a href="#contact" class="btn-outline">
+                            Contact Me
+                        </a>
+                    </div>
+                </div>
+                <div class="lg:w-1/2 flex justify-center animate-slide-up delay-200">
+                    <div class="relative">
+                        <!-- Profile Image -->
+                        <img src="IMG_9650.jpg" alt="Rakshitha SM professional profile picture" class="rounded-full w-64 h-64 md:w-80 md:h-80 object-cover border-8 border-white shadow-lg">
+                        <div class="absolute -bottom-4 -right-4 bg-white p-3 rounded-full shadow-md">
+                            <div class="bg-teal-100 text-teal-600 p-3 rounded-full">
+                                <i class="fas fa-code text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section-padding bg-white">
+        <div class="container mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4">About Me</h2>
+                <div class="w-20 h-1 bg-teal-600 mx-auto"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="order-2 md:order-1">
+                    <h3 class="text-2xl font-semibold mb-6">Who I Am</h3>
+                    <p class="text-gray-600 mb-4 leading-relaxed">
+                        I'm an Electrical and Electronics Engineering student with a passion for frontend development and entrepreneurship. My journey combines technical expertise with creative problem-solving to build digital solutions that make an impact.
+                    </p>
+                    <p class="text-gray-600 mb-4 leading-relaxed">
+                        As a developer, I specialize in crafting responsive, accessible web interfaces using modern technologies. My engineering background gives me a unique perspective on problem-solving and system design.
+                    </p>
+                    <p class="text-600 leading-relaxed">
+                        Beyond coding, I'm the co-founder of KR Services, where we're building solutions to make essential services more accessible to our community.
+                    </p>
+                </div>
+                <div class="order-1 md:order-2">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="card">
+                            <div class="text-teal-600 mb-4">
+                                <i class="fas fa-laptop-code text-3xl"></i>
+                            </div>
+                            <h4 class="font-semibold mb-2">Frontend Development</h4>
+                            <p class="text-gray-600 text-sm">Building responsive, accessible web interfaces</p>
+                        </div>
+                        <div class="card">
+                            <div class="text-teal-600 mb-4">
+                                <i class="fas fa-palette text-3xl"></i>
+                            </div>
+                            <h4 class="font-semibold mb-2">UI/UX Design</h4>
+                            <p class="text-gray-600 text-sm">Creating intuitive user experiences</p>
+                        </div>
+                        <div class="card">
+                            <div class="text-teal-600 mb-4">
+                                <i class="fas fa-bolt text-3xl"></i>
+                            </div>
+                            <h4 class="font-semibold mb-2">Electrical Engineering</h4>
+                            <p class="text-gray-600 text-sm">Circuit design & analysis</p>
+                        </div>
+                        <div class="card">
+                            <div class="text-teal-600 mb-4">
+                                <i class="fas fa-lightbulb text-3xl"></i>
+                            </div>
+                            <h4 class="font-semibold mb-2">Entrepreneurship</h4>
+                            <p class="text-gray-600 text-sm">Founder of KR Services</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="section-padding bg-gray-50">
+        <div class="container mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4">My Skills</h2>
+                <div class="w-20 h-1 bg-teal-600 mx-auto"></div>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+                <div class="flex flex-col items-center">
+                    <div class="bg-white p-4 rounded-full shadow-sm mb-3">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="HTML5" class="w-10 h-10">
+                    </div>
+                    <span class="text-sm font-medium">HTML5</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="bg-white p-4 rounded-full shadow-sm mb-3">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" alt="CSS3" class="w-10 h-10">
+                    </div>
+                    <span class="text-sm font-medium">CSS3</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="bg-white p-4 rounded-full shadow-sm mb-3">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript" class="w-10 h-10">
+                    </div>
+                    <span class="text-sm font-medium">JavaScript</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="bg-white p-4 rounded-full shadow-sm mb-3">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg" alt="PHP" class="w-10 h-10">
+                    </div>
+                    <span class="text-sm font-medium">PHP</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="bg-white p-4 rounded-full shadow-sm mb-3">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python" class="w-10 h-10">
+                    </div>
+                    <span class="text-sm font-medium">Python</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="bg-white p-4 rounded-full shadow-sm mb-3">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg" alt="Figma" class="w-10 h-10">
+                    </div>
+                    <span class="text-sm font-medium">Figma</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="bg-white p-4 rounded-full shadow-sm mb-3">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/matlab/matlab-original.svg" alt="MATLAB" class="w-10 h-10">
+                    </div>
+                    <span class="text-sm font-medium">MATLAB</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="section-padding bg-white">
+        <div class="container mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4">Featured Projects</h2>
+                <div class="w-20 h-1 bg-teal-600 mx-auto"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Project 1: Gravity Battery -->
+                <div class="project-card">
+                    <div class="relative">
+                        <img src="https://placehold.co/600x400/99AA55/FFFFFF?text=Gravity+Battery" alt="Gravity Battery" class="project-image">
+                        <div class="project-overlay">
+                            <div class="project-overlay-content">
+                                <h3 class="text-xl font-semibold mb-2">Gravity Battery – Renewable Energy Storage System (2024)</h3>
+                                <p class="text-sm mb-4">Designed a gravity-powered energy storage system that stores and releases energy efficiently. Ideal for renewable energy applications, it secured top 3 in a district-level competition.</p>
+                                <div class="flex flex-wrap justify-center gap-2 mb-4">
+                                    <span class="bg-gray-800 text-gray-100 text-xs px-2 py-1 rounded">Renewable Energy</span>
+                                    <span class="bg-gray-800 text-gray-100 text-xs px-2 py-1 rounded">Energy Storage</span>
+                                    <span class="bg-gray-800 text-gray-100 text-xs px-2 py-1 rounded">Engineering</span>
+                                </div>
+                                <div class="flex justify-center space-x-3">
+                                    <a href="https://drive.google.com/drive/folders/1v8PfJ2kXIl7CdI26p9V8h_W3n9P-VN2F?usp=sharing" target="_blank" class="text-teal-300 text-sm font-medium hover:underline">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 2: Virtuwear -->
+                <div class="project-card">
+                    <div class="relative">
+                        <img src="https://placehold.co/600x400/55AAAA/FFFFFF?text=Virtuwear" alt="Virtuwear - Virtual Try-On Solution" class="project-image">
+                        <div class="project-overlay">
+                            <div class="project-overlay-content">
+                                <h3 class="text-xl font-semibold mb-2">Virtuwear – Virtual Try-On Solution (Present)</h3>
+                                <p class="text-sm mb-4">An AI-powered virtual try-on system aimed at safer and smarter shopping. Combines body measurement sensors and display tech. Secured ₹1 Lakh in government funding.</p>
+                                <div class="flex flex-wrap justify-center gap-2 mb-4">
+                                    <span class="bg-gray-800 text-gray-100 text-xs px-2 py-1 rounded">AI</span>
+                                    <span class="bg-gray-800 text-gray-100 text-xs px-2 py-1 rounded">Virtual Reality</span>
+                                    <span class="bg-gray-800 text-gray-100 text-xs px-2 py-1 rounded">E-commerce</span>
+                                </div>
+                                <div class="flex justify-center space-x-3">
+                                    <a href="#" class="text-teal-300 text-sm font-medium hover:underline" onclick="event.preventDefault(); openProjectModal('virtuwear')">View Details</a>
+                                    <!-- No GitHub specified for this, remove if not applicable -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 3: EV Recharge Slot Booking System -->
+                <div class="project-card">
+                    <div class="relative">
+                        <img src="https://placehold.co/600x400/AA77FF/FFFFFF?text=EV+Booking" alt="EV Recharge Slot Booking System" class="project-image">
+                        <div class="project-overlay">
+                            <div class="project-overlay-content">
+                                <h3 class="text-xl font-semibold mb-2">EV Recharge Slot Booking System (2025)</h3>
+                                <p class="text-sm mb-4">Developed a smart web system to locate and book EV charging slots.</p>
+                                <div class="flex flex-wrap justify-center gap-2 mb-4">
+                                    <span class="bg-gray-800 text-gray-100 text-xs px-2 py-1 rounded">HTML</span>
+                                    <span class="bg-gray-800 text-gray-100 text-xs px-2 py-1 rounded">CSS</span>
+                                    <span class="bg-gray-800 text-gray-100 text-xs px-2 py-1 rounded">PHP</span>
+                                    <span class="bg-gray-800 text-gray-100 text-xs px-2 py-1 rounded">MySQL</span>
+                                    <span class="bg-gray-800 text-gray-100 text-xs px-2 py-1 rounded">AngularJS</span>
+                                </div>
+                                <div class="flex justify-center space-x-3">
+                                    <a href="#" class="text-teal-300 text-sm font-medium hover:underline" onclick="event.preventDefault(); openProjectModal('ev-recharge')">View Details</a>
+                                    <a href="https://github.com/Rakshu1117/Ev_bunk.git" target="_blank" class="text-gray-300 text-sm font-medium hover:underline">GitHub</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 4: Hospital Management System -->
+                <div class="project-card">
+                    <div class="relative">
+                        <img src="https://placehold.co/600x400/AA5555/FFFFFF?text=Hospital+System" alt="Hospital Management System" class="project-image">
+                        <div class="project-overlay">
+                            <div class="project-overlay-content">
+                                <h3 class="text-xl font-semibold mb-2">Hospital Management System (2024)</h3>
+                                <p class="text-sm mb-4">Built using Python, this system enables CRUD operations to manage patient data, appointments, and billing efficiently.</p>
+                                <div class="flex flex-wrap justify-center gap-2 mb-4">
+                                    <span class="bg-gray-800 text-gray-100 text-xs px-2 py-1 rounded">Python</span>
+                                    <span class="bg-gray-800 text-gray-100 text-xs px-2 py-1 rounded">Database Management</span>
+                                    <span class="bg-gray-800 text-gray-100 text-xs px-2 py-1 rounded">CRUD Operations</span>
+                                </div>
+                                <div class="flex justify-center space-x-3">
+                                    <a href="#" class="text-teal-300 text-sm font-medium hover:underline" onclick="event.preventDefault(); openProjectModal('hospital-management')">View Details</a>
+                                    <a href="https://github.com/Rakshu1117/Hospital-management-system-.git" target="_blank" class="text-gray-300 text-sm font-medium hover:underline">GitHub</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- KR Services Section -->
+    <section id="kr-services" class="section-padding bg-teal-600 text-white">
+        <div class="container mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4">KR Services</h2>
+                <div class="w-20 h-1 bg-white mx-auto"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h3 class="text-2xl font-semibold mb-6">Fast, Reliable Doorstep Assistance</h3>
+                    <p class="mb-6 leading-relaxed">
+                        As a co-founder of KR Services, I'm proud to be part of a team that's making essential services more accessible to our community. We provide fast, reliable solutions right at your doorstep.
+                    </p>
+                    <p class="mb-6 leading-relaxed">
+                        Our mission is to bridge the gap between service providers and those in need, creating a seamless experience that saves time and reduces hassle.
+                    </p>
+                    <a href="#" class="inline-block bg-white text-teal-600 font-medium py-2.5 px-6 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+                        Learn More
+                    </a>
+                </div>
+                <div class="flex justify-center">
+                    <div class="relative w-full max-w-md">
+                        <div class="bg-white/20 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-white/10">
+                            <h4 class="text-xl font-semibold mb-4">Our Services Include:</h4>
+                            <ul class="space-y-3">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle mt-1 mr-3"></i>
+                                    <span>Quick response to service requests</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle mt-1 mr-3"></i>
+                                    <span>Professional and reliable assistance</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle mt-1 mr-3"></i>
+                                    <span>Convenient doorstep service</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle mt-1 mr-3"></i>
+                                    <span>Affordable solutions</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Certifications & Education Section -->
+    <section id="certs-edu" class="section-padding bg-gray-50">
+        <div class="container mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4">Education & Achievements</h2>
+                <div class="w-20 h-1 bg-teal-600 mx-auto"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <!-- Certifications -->
+                <div>
+                    <h3 class="text-2xl font-semibold mb-6 text-center md:text-left">Certifications</h3>
+                    
+                    <div class="space-y-6">
+                        <!-- Infosys Springboard Certification -->
+                        <div class="card">
+                            <div class="flex items-start">
+                                <div class="bg-teal-100 text-teal-600 p-3 rounded-lg mr-4">
+                                    <i class="fas fa-certificate text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold mb-1">Infosys Springboard Certification</h4>
+                                    <p class="text-gray-600 text-sm mb-2">Completed comprehensive training modules and projects</p>
+                                    <a href="https://drive.google.com/file/d/18eINpdD0tXSifTOuVQ_3JB4md3faM_bX/view?usp=share_link" target="_blank" class="text-xs text-teal-600 font-medium hover:underline">View Certificate</a>
+                                    <span class="text-xs text-gray-500 font-medium ml-2">2023</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- MATLAB Certification -->
+                        <div class="card">
+                            <div class="flex items-start">
+                                <div class="bg-teal-100 text-teal-600 p-3 rounded-lg mr-4">
+                                    <i class="fas fa-certificate text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold mb-1">MATLAB Certification</h4>
+                                    <p class="text-gray-600 text-sm mb-2">Numerical computing and simulation proficiency</p>
+                                    <a href="https://drive.google.com/file/d/1fJkbYRPmANXxeM9nfEqiGpcuxEMJftQb/view?usp=sharing" target="_blank" class="text-xs text-teal-600 font-medium hover:underline">View Certificate</a>
+                                    <span class="text-xs text-gray-500 font-medium ml-2">2022</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Distic Level Competition (Top 3) -->
+                        <div class="card">
+                            <div class="flex items-start">
+                                <div class="bg-teal-100 text-teal-600 p-3 rounded-lg mr-4">
+                                    <i class="fas fa-trophy text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold mb-1">Distic Level Competition (Top 3)</h4>
+                                    <p class="text-gray-600 text-sm mb-2">Gravity Project - Innovation and execution</p>
+                                    <a href="https://drive.google.com/file/d/130fierGcoul7v6UuwQlECVkI0AvlndCu/view?usp=share_link" target="_blank" class="text-xs text-teal-600 font-medium hover:underline">View Details</a>
+                                    <span class="text-xs text-gray-500 font-medium ml-2">2021</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Hackathon -->
+                        <div class="card">
+                            <div class="flex items-start">
+                                <div class="bg-teal-100 text-teal-600 p-3 rounded-lg mr-4">
+                                    <i class="fas fa-laptop-code text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold mb-1">Hackathon Participation</h4>
+                                    <p class="text-gray-600 text-sm mb-2">Engaged in a competitive hackathon event, showcasing rapid prototyping and teamwork skills.</p>
+                                    <a href="https://drive.google.com/file/d/1fU7Vfvs8wUqBNV7W-Msy6rOkhmvwdsQm/view?usp=share_link" target="_blank" class="text-xs text-teal-600 font-medium hover:underline">View Details</a>
+                                    <span class="text-xs text-gray-500 font-medium ml-2">Year not specified, assumed recent</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Education -->
+                <div>
+                    <h3 class="text-2xl font-semibold mb-6 text-center md:text-left">Education</h3>
+                    
+                    <div class="card">
+                        <div class="flex items-start">
+                            <div class="bg-teal-100 text-teal-600 p-3 rounded-lg mr-4">
+                                <i class="fas fa-graduation-cap text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-1">Bachelor of Engineering (B.E.)</h4>
+                                <p class="text-gray-600 mb-2">Electrical & Electronics Engineering</p>
+                                <p class="text-gray-600 text-sm mb-2">Ballari Institution of Technology and Management (BITM)</p>
+                                <div class="flex items-center text-sm text-gray-500">
+                                    <i class="far fa-calendar-alt mr-2"></i>
+                                    <span>Expected 2026</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card mt-6">
+                        <div class="flex items-start">
+                            <div class="bg-teal-100 text-teal-600 p-3 rounded-lg mr-4">
+                                <i class="fas fa-briefcase text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-1">Internship Experience</h4>
+                                <p class="text-gray-600 mb-2">Internship EZ Trainings & Technologies Pvt. Ltd.</p>
+                                <p class="text-gray-600 text-sm mb-2">Python Development - 1 Month</p>
+                                <a href="https://drive.google.com/file/d/1PBhSzB3YuxdYQUz5tVQzrSm78LQsEzck/view?usp=share_link" target="_blank" class="text-xs text-teal-600 font-medium hover:underline">View Details</a>
+                                <div class="flex items-center text-sm text-gray-500">
+                                    <i class="far fa-calendar-alt mr-2"></i>
+                                    <span>2023</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section-padding bg-white">
+        <div class="container mx-auto max-w-4xl">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4">Get In Touch</h2>
+                <div class="w-20 h-1 bg-teal-600 mx-auto"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div>
+                    <h3 class="text-xl font-semibold mb-6">Let's Connect</h3>
+                    <p class="text-gray-600 mb-8 leading-relaxed">
+                        I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision. Feel free to reach out through any of the channels below.
+                    </p>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="text-teal-600 mr-4 mt-1">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium mb-1">Email</h4>
+                                <a href="mailto:smraksusmrakshu@gmail.com" class="text-gray-600 hover:text-teal-600 transition-colors duration-200">smraksusmrakshu@gmail.com</a>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="text-teal-600 mr-4 mt-1">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium mb-1">Phone</h4>
+                                <a href="tel:+917975567742" class="text-gray-600 hover:text-teal-600 transition-colors duration-200">+91 9632235406</a>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="text-teal-600 mr-4 mt-1">
+                                <i class="fab fa-linkedin-in"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium mb-1">LinkedIn</h4>
+                                <a href="https://www.linkedin.com/in/rakshitha-sm/" target="_blank" class="text-gray-600 hover:text-teal-600 transition-colors duration-200">linkedin.com/in/rakshitha-sm</a>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="text-teal-600 mr-4 mt-1">
+                                <i class="fab fa-github"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium mb-1">GitHub</h4>
+                                <a href="https://github.com/Rakshu1117" target="_blank" class="text-gray-600 hover:text-teal-600 transition-colors duration-200">github.com/Rakshu1117</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 p-8 rounded-lg shadow-sm border border-gray-100">
+                    <h3 class="text-xl font-semibold mb-6">Send Me a Message</h3>
+                    <form action="#" method="POST" class="space-y-4">
+                        <div>
+                            <label for="contact-name" class="sr-only">Name</label>
+                            <input type="text" id="contact-name" name="name" class="input-field" placeholder="Your Name" required>
+                        </div>
+                        <div>
+                            <label for="contact-email" class="sr-only">Email</label>
+                            <input type="email" id="contact-email" name="email" class="input-field" placeholder="Your Email" required>
+                        </div>
+                        <div>
+                            <label for="contact-message" class="sr-only">Message</label>
+                            <textarea id="contact-message" name="message" rows="5" class="input-field" placeholder="Your Message" required></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary w-full">Send Message</button>
+                        <p class="text-xs text-gray-500 mt-2 text-center">Note: This is a frontend-only form. For backend functionality, a server-side script is required.</p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer class="bg-gray-800 text-gray-300 py-8 text-center">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <p>&copy; 2025 Rakshitha SM. All rights reserved.</p>
+            <p class="mt-2 text-sm">Designed & Developed with <i class="fas fa-heart text-red-500"></i> by Rakshitha SM.</p>
+        </div>
+    </footer>
+    <!-- JavaScript for smooth scrolling and modal functionality -->
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const href = this.getAttribute('href');
+
+                if (href === '#') {
+                    // Scroll to the top of the page for links with href="#"
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                } else {
+                    // For other hash links (e.g., #about), scroll to the corresponding section
+                    const targetElement = document.querySelector(href);
+                    if (targetElement) { // Ensure the target element exists
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    } else {
+                        console.error('Target element not found for href:', href);
+                    }
+                }
+            });
+        });
+
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when a link is clicked
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Add shadow to header on scroll
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('header-scrolled');
+            } else {
+                header.classList.remove('header-scrolled');
+            }
+        });
+
+        // Project Modal Logic
+        const projectModal = document.getElementById('projectModal');
+        const modalProjectImage = document.getElementById('modalProjectImage');
+        const modalProjectTitle = document.getElementById('modalProjectTitle');
+        const modalProjectDescription = document.getElementById('modalProjectDescription');
+        const modalProjectTechStack = document.getElementById('modalProjectTechStack');
+        const modalLiveDemoLink = document.getElementById('modalLiveDemoLink');
+        const modalGitHubLink = document.getElementById('modalGitHubLink');
+
+        // Sample project data (you will replace this with your actual project details)
+        const projectsData = {
+            'gravity-battery': {
+                title: 'Gravity Battery – Renewable Energy Storage System (2024)',
+                description: 'Designed a gravity-powered energy storage system that stores and releases energy efficiently. Ideal for renewable energy applications, it secured top 3 in a district-level competition.',
+                image: 'https://placehold.co/800x500/99AA55/FFFFFF?text=Gravity+Battery+Project',
+                tech: ['Renewable Energy', 'Energy Storage', 'Engineering'],
+                liveDemo: 'https://drive.google.com/drive/folders/1v8PfJ2kXIl7CdI26p9V8h_W3n9P-VN2F?usp=sharing', // Updated link
+                github: '#'
+            },
+            'virtuwear': {
+                title: 'Virtuwear – Virtual Try-On Solution (Present)',
+                description: 'An AI-powered virtual try-on system aimed at safer and smarter shopping. Combines body measurement sensors and display tech. Secured ₹1 Lakh in government funding.',
+                image: 'https://placehold.co/800x500/55AAAA/FFFFFF?text=Virtuwear+Project',
+                tech: ['AI', 'Virtual Reality', 'E-commerce'],
+                liveDemo: '#',
+                github: '#'
+            },
+            'ev-recharge': {
+                title: 'EV Recharge Slot Booking System (2025)',
+                description: 'Developed a smart web system to locate and book EV charging slots.',
+                image: 'https://placehold.co/800x500/AA77FF/FFFFFF?text=EV+Booking+System',
+                tech: ['HTML', 'CSS', 'PHP', 'MySQL', 'AngularJS'],
+                liveDemo: '#',
+                github: 'https://github.com/Rakshu1117/Ev_bunk.git' // Updated link
+            },
+            'hospital-management': {
+                title: 'Hospital Management System (2024)',
+                description: 'Built using Python, this system enables CRUD operations to manage patient data, appointments, and billing efficiently.',
+                image: 'https://placehold.co/800x500/AA5555/FFFFFF?text=Hospital+System',
+                tech: ['Python', 'Database Management', 'CRUD Operations'],
+                liveDemo: '#',
+                github: 'https://github.com/Rakshu1117/Hospital-management-system-.git' // Updated link
+            }
+        };
+
+        function openProjectModal(projectId) {
+            const project = projectsData[projectId];
+            if (project) {
+                modalProjectImage.src = project.image;
+                modalProjectTitle.textContent = project.title;
+                modalProjectDescription.textContent = project.description;
+
+                // Clear previous tech stack
+                modalProjectTechStack.innerHTML = '';
+                project.tech.forEach(tech => {
+                    const span = document.createElement('span');
+                    span.className = 'bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded border border-gray-200'; /* Updated for light theme */
+                    span.textContent = tech;
+                    modalProjectTechStack.appendChild(span);
+                });
+
+                modalLiveDemoLink.href = project.liveDemo;
+                modalGitHubLink.href = project.github;
+
+                // Show/hide links based on availability
+                if (project.liveDemo && project.liveDemo !== '#') {
+                    modalLiveDemoLink.style.display = 'inline-flex';
+                } else {
+                    modalLiveDemoLink.style.display = 'none';
+                }
+                if (project.github && project.github !== '#') {
+                    modalGitHubLink.style.display = 'inline-flex';
+                } else {
+                    modalGitHubLink.style.display = 'none';
+                }
+
+                projectModal.classList.add('open');
+                document.body.style.overflow = 'hidden'; // Prevent scrolling background
+            }
+        }
+
+        function closeProjectModal() {
+            projectModal.classList.remove('open');
+            document.body.style.overflow = ''; // Restore scrolling
+        }
+
+        // Close modal when clicking outside content
+        projectModal.addEventListener('click', (e) => {
+            if (e.target === projectModal) {
+                closeProjectModal();
+            }
+        });
+    </script>
+</body>
+</html>
